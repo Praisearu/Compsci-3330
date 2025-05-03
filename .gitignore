@@ -1,0 +1,22 @@
+/target/
+
+# Eclipse / Maven / Java
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+target/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# VS Code / IntelliJ / misc
+.idea/
+.vscode/
+*.iml
+
