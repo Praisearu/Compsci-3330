@@ -5,12 +5,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import petadoption.controller.AdoptionController;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.Color;
 
 public class MainFrame extends JFrame {
 
@@ -39,7 +43,7 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		setTitle("Adoption Management");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 575, 352);
+		setBounds(100, 100, 733, 829);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -47,25 +51,48 @@ public class MainFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnAdopt = new JButton("Adopt A Pet");
+		btnAdopt.setForeground(new Color(32, 51, 129));
+		btnAdopt.setFont(new Font("Rockwell", Font.PLAIN, 23));
 		btnAdopt.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        dispose();
+		        try {
+		        	AdoptionController controller = new AdoptionController(); 
+		        	AdoptFrame adoptFrame = new AdoptFrame(controller);       
+		        	controller.setView(adoptFrame); 
+		        	adoptFrame.setVisible(true);
+		        } catch (Exception e1) {
+		            e1.printStackTrace();
+		        }
+		    }
 		});
-		btnAdopt.setBounds(74, 170, 174, 50);
-		contentPane.add(btnAdopt);
 		
-		JButton btnViewPets = new JButton("View Adoptable Pets");
-		btnViewPets.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
+		JButton btnViewAnimalList = new JButton("View Animal List");
+		btnViewAnimalList.setForeground(new Color(32, 51, 129));
+		btnViewAnimalList.setFont(new Font("Rockwell", Font.PLAIN, 23));
+		btnViewAnimalList.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        dispose();
+		        try {
+		        	AdoptionController controller = new AdoptionController(); 
+		        	ManagePets manageListFrame = new ManagePets(controller);       
+		        	controller.setManageView(manageListFrame); //  need implementation by your ENOBONG
+		        	manageListFrame.loadTable(controller.getAllPets());
+		        	manageListFrame.setVisible(true);
+		        } catch (Exception e1) {
+		            e1.printStackTrace();
+		        }
+		    }
 		});
-		btnViewPets.setBounds(327, 170, 174, 50);
-		contentPane.add(btnViewPets);
+		
+		btnAdopt.setBounds(235, 451, 251, 71);
+		contentPane.add(btnAdopt);
+		btnViewAnimalList.setBounds(235, 550, 251, 71);
+		contentPane.add(btnViewAnimalList);
 		
 		JLabel lblNewLabel = new JLabel("  Welcome to Adopt Me!");
-		lblNewLabel.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 17));
-		lblNewLabel.setBounds(175, 18, 220, 50);
+		lblNewLabel.setFont(new Font("Rockwell", Font.BOLD, 26));
+		lblNewLabel.setBounds(189, 140, 341, 94);
 		contentPane.add(lblNewLabel);
 	}
 }
