@@ -21,8 +21,13 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultComboBoxModel;
 
+
 import petadoption.controller.AdoptionController;
 import petadoption.model.Pet;
+import petadoption.model.Dog;
+import petadoption.model.Cat;
+import petadoption.model.Rabbit;
+import petadoption.model.ExoticAnimal;
 
 public class ManagePets extends JFrame {
 
@@ -131,7 +136,6 @@ public class ManagePets extends JFrame {
             btnAddAnimal.setBounds(620, 360, 180, 40);
             contentPane.add(btnAddAnimal);
             
-            // ENOBONG PARTNER WILL IMPLEMENT THIS
             btnAddAnimal.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String id = txtId.getText().trim();
@@ -141,21 +145,53 @@ public class ManagePets extends JFrame {
                     String ageStr = txtAge.getText().trim();
 
                     if (id.isEmpty() || name.isEmpty() || species.isEmpty() || ageStr.isEmpty()) {
-                        JOptionPane.showMessageDialog(contentPane, "All fields are required", 
-                                "Validation Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(contentPane, "All fields are required", "Validation Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
-                  // TODO (partner): Parse the age input and validate it.
-                 // Then attempt to add a new animal using the controller.
-                 // If successful: show a success message, clear fields, and refresh the table:
-                 // call loadTable(controller.getAllPets());
-                 // If failure: show an appropriate error message (e.g., duplicate ID).
+                    try {
+                        int age = Integer.parseInt(ageStr);
+                        Pet newPet;
+                        switch (type) {
+        case "Dog":
+            newPet = new Dog();
+            break;
+        case "Cat":
+            newPet = new Cat();
+            break;
+        case "Rabbit":
+            newPet = new Rabbit();
+            break;
+        case "ExoticAnimal":
+            newPet = new ExoticAnimal();
+            break;
+        default:
+            throw new IllegalArgumentException("Invalid type");
+    }
+    newPet.setId(id);
+    newPet.setName(name);
+    newPet.setType(Pet.Type.valueOf(type.trim()));
+    newPet.setSpecies(species);
+    newPet.setAge(age);
+    newPet.setAdopted(false);
 
-                    JOptionPane.showMessageDialog(contentPane, "Add animal logic will be implemented by ENOBONG",
-                            "Info", JOptionPane.INFORMATION_MESSAGE);
+                        boolean added = controller.addPet(newPet);
+                        if (added) {
+                            JOptionPane.showMessageDialog(contentPane, "Animal added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            txtId.setText(""); txtName.setText(""); txtSpecies.setText(""); txtAge.setText("");
+                            loadTable(controller.getAllPets());
+                        } else {
+                            JOptionPane.showMessageDialog(contentPane, "Pet with this ID already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(contentPane, "Invalid age format. Please enter a number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(contentPane, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
+
 
             
             JButton btnRemoveAnimal = new JButton("Remove Selected");
@@ -173,14 +209,16 @@ public class ManagePets extends JFrame {
                         return;
                     }
 
-                 // TODO (partner): Retrieve the selected animal ID.
-                 // Use the controller to remove the animal.
-                 // If removal is successful, show a message and refresh the table:
-                 // call loadTable(controller.getAllPets());
-                 // Otherwise, show an error dialog.
-
-                    JOptionPane.showMessageDialog(contentPane, "Remove animal logic will be implemented by ENOBONG",
-                            "Info", JOptionPane.INFORMATION_MESSAGE);
+                    String petId = animalTable.getValueAt(selectedRow, 0).toString();
+                    boolean removed = controller.removePetById(petId);
+                    if (removed) {
+                        JOptionPane.showMessageDialog(contentPane, "Animal removed successfully.",
+                                "Removed", JOptionPane.INFORMATION_MESSAGE);
+                        loadTable(controller.getAllPets());
+                    } else {
+                        JOptionPane.showMessageDialog(contentPane, "Failed to remove pet.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
 
@@ -200,12 +238,18 @@ public class ManagePets extends JFrame {
                         return;
                     }
 
-                    // TODO (partner): Get the ID of the selected animal.
-                    // Use the controller to fetch the full pet object.
-                    // Display the pet's details in a dialog box.
-
-                    JOptionPane.showMessageDialog(contentPane, "View details logic will be implemented by ENOBONG",
-                            "Info", JOptionPane.INFORMATION_MESSAGE);
+                    String id = animalTable.getValueAt(selectedRow, 0).toString();
+                    Pet pet = controller.getPetById(id);
+                    if (pet != null) {
+                        JOptionPane.showMessageDialog(contentPane,
+                            String.format("ID: %s\nName: %s\nType: %s\nSpecies: %s\nAge: %d\nAdopted: %s",
+                                    pet.getId(), pet.getName(), pet.getType(), pet.getSpecies(),
+                                    pet.getAge(), pet.isAdopted() ? "Yes" : "No"),
+                            "Pet Details", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(contentPane, "Pet not found.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
 
@@ -230,13 +274,16 @@ public class ManagePets extends JFrame {
     	    }); 
             btnSave.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                	// TODO (partner): Save current list of all pets to a JSON file.
-                    // Use controller.getAllPets() to get the data.
-                    // Use SimpleDateFormat to format the file name like: "20250503_184522_pets.json"
-                    // Save the file under: src/main/resources/saved/
-
-                    JOptionPane.showMessageDialog(contentPane, "Save logic will be implemented by ENOBONG",
-                            "Info", JOptionPane.INFORMATION_MESSAGE);
+                    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    String fileName = "src/main/resources/saved/" + timestamp + "_pets.json";
+                    boolean success = controller.savePetsToFile(fileName);
+                    if (success) {
+                        JOptionPane.showMessageDialog(contentPane, "Changes saved to file successfully!",
+                                "Saved", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(contentPane, "Failed to save changes.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
 
