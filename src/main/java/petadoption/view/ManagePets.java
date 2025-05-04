@@ -29,6 +29,10 @@ import petadoption.model.Cat;
 import petadoption.model.Rabbit;
 import petadoption.model.ExoticAnimal;
 
+/**
+ * ManagePets is the interface used  to add, remove, view, and save adoptable animals.
+ * It connects to the AdoptionController to update the pet list.
+ */
 public class ManagePets extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -43,7 +47,10 @@ public class ManagePets extends JFrame {
     private AdoptionController controller;
     
     
-
+    /**
+     * Constructs the ManagePets window with form inputs, animal table, and control buttons.
+     * @param controller the adoption controller used for handling logic
+     */
        public ManagePets(AdoptionController controller) {
             setTitle("Manage Animal List");
             this.controller = controller;
@@ -130,7 +137,7 @@ public class ManagePets extends JFrame {
             contentPane.add(txtAge);
             txtAge.setColumns(10);
 
-            // Buttons for add, remove, view details
+            // Add Animal
             JButton btnAddAnimal = new JButton("Add Animal");
             btnAddAnimal.setFont(new Font("Rockwell", Font.PLAIN, 15));
             btnAddAnimal.setBounds(620, 360, 180, 40);
@@ -176,6 +183,7 @@ public class ManagePets extends JFrame {
     newPet.setAdopted(false);
 
                         boolean added = controller.addPet(newPet);
+                        loadTable(controller.getAllPets());
                         if (added) {
                             JOptionPane.showMessageDialog(contentPane, "Animal added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                             txtId.setText(""); txtName.setText(""); txtSpecies.setText(""); txtAge.setText("");
@@ -193,13 +201,13 @@ public class ManagePets extends JFrame {
             });
 
 
-            
+         // Remove Animal
             JButton btnRemoveAnimal = new JButton("Remove Selected");
             btnRemoveAnimal.setFont(new Font("Rockwell", Font.PLAIN, 15));
             btnRemoveAnimal.setBounds(620, 420, 180, 40);
             contentPane.add(btnRemoveAnimal);
             
-            // ENOBONG WILL IMPLEMENT THIS
+            
             btnRemoveAnimal.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     int selectedRow = animalTable.getSelectedRow();
@@ -211,6 +219,7 @@ public class ManagePets extends JFrame {
 
                     String petId = animalTable.getValueAt(selectedRow, 0).toString();
                     boolean removed = controller.removePetById(petId);
+                    loadTable(controller.getAllPets());
                     if (removed) {
                         JOptionPane.showMessageDialog(contentPane, "Animal removed successfully.",
                                 "Removed", JOptionPane.INFORMATION_MESSAGE);
@@ -222,13 +231,13 @@ public class ManagePets extends JFrame {
                 }
             });
 
-            
+            // View Details
             JButton btnViewDetails = new JButton("View Details");
             btnViewDetails.setFont(new Font("Rockwell", Font.PLAIN, 15));
             btnViewDetails.setBounds(620, 480, 180, 40);
             contentPane.add(btnViewDetails);
             
-            // ENOBONG WILL IMPLEMENT THIS
+            
             btnViewDetails.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     int selectedRow = animalTable.getSelectedRow();
@@ -253,12 +262,13 @@ public class ManagePets extends JFrame {
                 }
             });
 
-            
+            // Save Changes
             JButton btnSave = new JButton("Save My Changes");
             btnSave.setFont(new Font("Rockwell", Font.PLAIN, 15));
             btnSave.setBounds(620, 540, 180, 40);
             contentPane.add(btnSave);
             
+         // Back Button
             JButton btnBack = new JButton("Back");
             btnBack.addActionListener(new ActionListener() {
     	        public void actionPerformed(ActionEvent e) {
@@ -275,8 +285,10 @@ public class ManagePets extends JFrame {
             btnSave.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    String fileName = "src/main/resources/saved/" + timestamp + "_pets.json";
+                    
+                    String fileName = "src/main/resources/" + timestamp + "_pets.json";
                     boolean success = controller.savePetsToFile(fileName);
+                    
                     if (success) {
                         JOptionPane.showMessageDialog(contentPane, "Changes saved to file successfully!",
                                 "Saved", JOptionPane.INFORMATION_MESSAGE);
@@ -293,19 +305,23 @@ public class ManagePets extends JFrame {
             contentPane.add(btnBack);
         }
        
+       /**
+        * Loads pet data into the JTable from the provided pet list.
+        * @param petList List of Pet objects to display
+        */
        public void loadTable(List<Pet> petList) {
-    	    if (petList == null) return;
-    	    DefaultTableModel model = (DefaultTableModel) animalTable.getModel();
-    	    model.setRowCount(0);
-    	    for (Pet pet : petList) {
-    	        model.addRow(new Object[] {
-    	            pet.getId(),
-    	            pet.getName(),
-    	            pet.getType(),
-    	            pet.getSpecies(),
-    	            pet.getAge(),
-    	            pet.isAdopted() ? "Yes" : "No"
-    	        });
+           if (petList == null) return;
+           DefaultTableModel model = (DefaultTableModel) animalTable.getModel();
+           model.setRowCount(0);
+           for (Pet pet : petList) {
+               model.addRow(new Object[] {
+                   pet.getId(),
+                   pet.getName(),
+                   pet.getType(),
+                   pet.getSpecies(),
+                   pet.getAge(),
+                   pet.isAdopted() ? "Yes" : "No"
+               });
     	    }
     	}
 

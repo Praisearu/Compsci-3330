@@ -16,6 +16,10 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.Color;
 
+/**
+ * MainFrame is the homepage of the Pet Adoption System.
+ * From here, users can choose to adopt a pet or view the list of available pets.
+ */
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -38,7 +42,7 @@ public class MainFrame extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Creates the main window frame with two buttons: Adopt A Pet and View Animal List.
 	 */
 	public MainFrame() {
 		setTitle("Adoption Management");
@@ -67,6 +71,7 @@ public class MainFrame extends JFrame {
 		    }
 		});
 		
+		// Button: View Animal List
 		JButton btnViewAnimalList = new JButton("View Animal List");
 		btnViewAnimalList.setForeground(new Color(32, 51, 129));
 		btnViewAnimalList.setFont(new Font("Rockwell", Font.PLAIN, 23));
@@ -76,7 +81,7 @@ public class MainFrame extends JFrame {
 		        try {
 		        	AdoptionController controller = new AdoptionController(); 
 		        	ManagePets manageListFrame = new ManagePets(controller);       
-		        	controller.setManageView(manageListFrame); //  need implementation by your ENOBONG
+		        	controller.setManageView(manageListFrame); 
 		        	manageListFrame.loadTable(controller.getAllPets());
 		        	manageListFrame.setVisible(true);
 		        } catch (Exception e1) {

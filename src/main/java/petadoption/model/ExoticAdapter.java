@@ -1,8 +1,19 @@
 package petadoption.model;
 
+/**
+ * ExoticAdapter adapts an ExoticAnimal object to the Pet interface
+ * so that exotic animals can be treated like standard pets within the system.
+ */
 public class ExoticAdapter extends Pet {
-	private ExoticAnimal exoticAnimal;
+	private final ExoticAnimal exoticAnimal;
 
+	
+	/**
+     * Constructs an adapter for an exotic animal, mapping its data
+     * to the standard Pet fields.
+     *
+     * @param exoticAnimal the exotic animal to wrap
+     */
 	public ExoticAdapter(ExoticAnimal exoticAnimal) {
 		this.exoticAnimal = exoticAnimal;
 
@@ -15,6 +26,9 @@ public class ExoticAdapter extends Pet {
 		this.setAdopted(false); 
 	}
 
+	/**
+     * Displays the adapted exotic animal's details.
+     */
 	@Override
 	public void show() {
 		System.out.println("ID: " + getId());

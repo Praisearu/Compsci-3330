@@ -33,6 +33,10 @@ import petadoption.model.Pet;
 
 import javax.swing.DefaultComboBoxModel;
 
+/**
+ * AdoptAPet allows users to select and adopt an available pet.
+ * It verifies pet details, marks them as adopted, and saves updates.
+ */
 public class AdoptAPet extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -43,6 +47,10 @@ public class AdoptAPet extends JFrame {
     private JTable availablePets;
     private AdoptionController controller;
 
+    /**
+     * Constructs the "Adopt A Pet" window where users can adopt available pets.
+     * @param controller the controller managing pet adoption logic
+     */
     public AdoptAPet(AdoptionController controller) {
         setTitle("Adopt A Pet");
         this.controller = controller;
@@ -54,11 +62,13 @@ public class AdoptAPet extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
+     // Header
         JLabel lblTitle = new JLabel("Available Pets For Adoption");
         lblTitle.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, 24));
         lblTitle.setBounds(16, 16, 357, 49);
         contentPane.add(lblTitle);
 
+     // Sort dropdown
         JComboBox<String> cbSortBy = new JComboBox<>();
         cbSortBy.setModel(new DefaultComboBoxModel<>(new String[] {"Sort by...", "Sort by name", "Sort by age", "Sort by species"}));
         cbSortBy.setSelectedItem("Sort by...");
@@ -76,7 +86,7 @@ public class AdoptAPet extends JFrame {
             }
         });
 
-
+     // Table to show adoptable pets
         availablePets = new JTable();
         availablePets.setFont(new Font("Noto Sans Batak", Font.BOLD, 10));
         availablePets.setRowHeight(50);
@@ -111,14 +121,13 @@ public class AdoptAPet extends JFrame {
         contentPane.add(txtAnimalName);
         txtAnimalName.setColumns(10);
 
-        // Save button for adoption
+     // Button to confirm adoption
         JButton btnSaveAdoption = new JButton("Adopt this Pet");
         btnSaveAdoption.setFont(new Font("Rockwell", Font.PLAIN, 15));
         btnSaveAdoption.setBounds(472, 461, 180, 40);
         contentPane.add(btnSaveAdoption);
         
-        // Action listener for Adopt button
-        // ENOBONG WILL IMPLEMENT THE ACTUAL ADOPTION LOGIC HERE
+ 
         btnSaveAdoption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String animalId = txtAnimalID.getText().trim();
@@ -130,10 +139,7 @@ public class AdoptAPet extends JFrame {
                     return;
                 }
 
-                // TODO (partner): Check if animal exists and is not already adopted.
-                // Then perform the adoption, save updated data to file, and refresh the table.
-                // Also reset the input fields and show a success message.
-                // Otherwise, show an error message.
+                
 
                 Pet pet = controller.findPetByIdAndName(animalId, animalName);
 
@@ -185,6 +191,10 @@ public class AdoptAPet extends JFrame {
         contentPane.add(btnBack);
     }
     
+    /**
+     * Loads the list of pets that are currently not adopted into the table.
+     * @param petList list of Pet objects
+     */
     public void loadTable(List<Pet> petList) {
         if (petList == null) return;
         DefaultTableModel model = (DefaultTableModel) availablePets.getModel();
@@ -204,6 +214,10 @@ public class AdoptAPet extends JFrame {
         }
     }
 
+    /**
+     * Sets the controller instance (if needed after frame creation).
+     * @param controller AdoptionController to use
+     */
     public void setController(AdoptionController controller) {
         this.controller = controller;
     }

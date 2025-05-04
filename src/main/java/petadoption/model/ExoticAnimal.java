@@ -1,6 +1,9 @@
 package petadoption.model;
 
-
+/**
+ * ExoticAnimal is a subclass of Pet that represents animals not typically categorized
+ * as standard pets. This class holds additional fields unique to exotic species.
+ */
 public class ExoticAnimal extends Pet {
 	
 
@@ -10,9 +13,9 @@ public class ExoticAnimal extends Pet {
 	String subSpecies;
 	int yearsOld;
 	
-	/**
-	 * @return the uniqueId
-	 */
+	 /**
+     * @return the unique identifier for the exotic animal
+     */
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -90,6 +93,9 @@ public class ExoticAnimal extends Pet {
 	}
 	
 
+	/**
+     * Prints the full details of the exotic animal.
+     */
 	@Override 
 	public void show() {
 			

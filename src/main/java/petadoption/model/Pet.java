@@ -1,7 +1,11 @@
 package petadoption.model;
 
 
-
+/**
+ * Abstract class representing a generic Pet.
+ * All pets share common properties like ID, name, type, species, age, and adoption status.
+ * Subclasses (Dog, Cat, Rabbit, ExoticAnimal) must implement the show() method.
+ */
 public abstract class Pet {
 
 	String id;
@@ -14,7 +18,9 @@ public abstract class Pet {
 	private Type type;
 
 
-
+	/**
+     * Displays pet details — implemented by each subclass.
+     */
 	abstract void show();
 
 	/**

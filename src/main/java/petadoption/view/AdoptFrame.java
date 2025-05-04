@@ -26,16 +26,25 @@ import java.awt.Color;
 
 import javax.swing.JButton;
 
+/**
+ * AdoptFrame displays the list of pets available for adoption.
+ * Users can sort pets and proceed to adopt one.
+ */
 public class AdoptFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private Object[] Col = {"ID" , "Name" , "Type", "Species", "Age"}; 
+	private final Object[] Col = {"ID" , "Name" , "Type", "Species", "Age"}; // Column headers for pet table
 	private JTable availablePets;
 	private AdoptionController controller;
 
 	
-	 
+	
+	
+	/**
+     * Constructor to create and display the adopt pet frame.
+     * @param controller The AdoptionController instance to interact with model logic.
+     */
 	public AdoptFrame(AdoptionController controller) {
 		setVisible(true);
 	    this.controller = controller;
@@ -47,11 +56,13 @@ public class AdoptFrame extends JFrame {
 	    setContentPane(contentPane);
 	    contentPane.setLayout(null);
 
+	    // Title
 	    JLabel lblNewLabel = new JLabel("List of All Pets");
 	    lblNewLabel.setBounds(82, 17, 209, 46);
 	    lblNewLabel.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, 24));
 	    contentPane.add(lblNewLabel);
 
+	    // Sort dropdown
 	    JComboBox<String> cbSortBy = new JComboBox<>();
 	    cbSortBy.setModel(new DefaultComboBoxModel<>(new String[] {"Sort by...", "Sort by name", "Sort by age", "Sort by species"}));
 	    cbSortBy.setSelectedItem("Sort by...");
@@ -83,6 +94,7 @@ public class AdoptFrame extends JFrame {
 	    scrollPane.setBounds(30, 103, 319, 511);
 	    contentPane.add(scrollPane);
 
+	 // Adopt button
 	    JButton btnadoptAPet = new JButton("I'd Like to Adopt!");
 	    btnadoptAPet.setFont(new Font("Rockwell", Font.PLAIN, 15));
 	    btnadoptAPet.setBounds(458, 243, 236, 59);
@@ -91,7 +103,7 @@ public class AdoptFrame extends JFrame {
 	            dispose();
 	            try {
 	                AdoptAPet adoptPetFrame = new AdoptAPet(controller);
-	                adoptPetFrame.loadTable(controller.getNonAdoptedPets()); // This will require implementation by your partner
+	                adoptPetFrame.loadTable(controller.getNonAdoptedPets()); 
 	                adoptPetFrame.setVisible(true);
 	            } catch (Exception e1) {
 	                e1.printStackTrace();
@@ -100,6 +112,7 @@ public class AdoptFrame extends JFrame {
 	    });
 	    contentPane.add(btnadoptAPet);
 
+	 // Back button
 	    JButton btnBack = new JButton("Back");
 	    btnBack.setFont(new Font("Rockwell", Font.PLAIN, 15));
 	    btnBack.setBounds(458, 377, 236, 59);
@@ -117,6 +130,11 @@ public class AdoptFrame extends JFrame {
 	    });
 	    contentPane.add(btnBack);
 	}
+	
+	/**
+     * Loads a list of pets into the table.
+     * @param petList The list of pets to display.
+     */
 	public void loadTable(List<Pet> petList) {
 	    if (petList == null) return;
 	    DefaultTableModel model = (DefaultTableModel) availablePets.getModel();
@@ -135,7 +153,10 @@ public class AdoptFrame extends JFrame {
 
 
 
-
+	/**
+     * Allows setting the controller after initialization.
+     * @param controller the AdoptionController to use.
+     */
 public void setController(AdoptionController controller) {
 	this.controller = controller;
 }
