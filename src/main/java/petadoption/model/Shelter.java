@@ -40,4 +40,8 @@ public class Shelter<T extends Pet> {
     public List<T> getAllPets() {
         return pets; 
     }
+    
+    public boolean removePetById(String id) {
+        return pets.removeIf(p -> p.getId().equalsIgnoreCase(id));
+    }
 }
