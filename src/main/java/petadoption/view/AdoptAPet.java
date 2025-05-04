@@ -135,8 +135,36 @@ public class AdoptAPet extends JFrame {
                 // Also reset the input fields and show a success message.
                 // Otherwise, show an error message.
 
-                JOptionPane.showMessageDialog(contentPane, "Adoption logic will be implemented by ENOBONG",
-                        "Info", JOptionPane.INFORMATION_MESSAGE);
+                Pet pet = controller.findPetByIdAndName(animalId, animalName);
+
+                if (pet == null) {
+                    JOptionPane.showMessageDialog(contentPane, "Pet not found. Please check the ID and Name.",
+                            "Adoption Failed", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (pet.isAdopted()) {
+                    JOptionPane.showMessageDialog(contentPane, "This pet has already been adopted!",
+                            "Adoption Failed", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                controller.adoptPet(pet);
+
+                String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String fileName = "src/main/resources/saved/" + timestamp + "_pets.json";
+                boolean success = controller.savePetsToFile(fileName);
+
+                if (success) {
+                    JOptionPane.showMessageDialog(contentPane, "Adoption successful! Pet marked as adopted.",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
+                    txtAnimalID.setText("");
+                    txtAnimalName.setText("");
+                    loadTable(controller.getNonAdoptedPets());
+                } else {
+                    JOptionPane.showMessageDialog(contentPane, "Failed to save adoption to file.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
