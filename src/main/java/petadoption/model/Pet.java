@@ -6,7 +6,7 @@ public abstract class Pet {
 
 	String id;
 	String name;
-	enum Type {Dog, Cat, Rabbit, ExoticAnimal};
+	public enum Type {Dog, Cat, Rabbit, ExoticAnimal};
 	String species;
 	int age;
 	boolean adopted;
